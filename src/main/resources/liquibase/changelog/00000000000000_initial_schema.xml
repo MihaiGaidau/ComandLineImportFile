@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+
+
+    <changeSet id="00000000000000-1" author="mgaidau">
+        <sql>drop table if exists product;</sql>
+
+        <createTable tableName="product">
+            <column name="id" type="VARCHAR(255)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_gift_card" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vendor" type="VARCHAR(255)"/>
+            <column name="updated_at" type="datetime"/>
+            <column name="published_at" type="datetime"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="00000000000000-2" author="mgaidau">
+        <sql>drop table if exists variant;</sql>
+
+        <!-- Create Variant Table -->
+        <createTable tableName="variant">
+            <column name="id" type="varchar(255)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product" type="varchar(255)">
+                <constraints nullable="false" foreignKeyName="fk_variant_product" references="product(id)"/>
+            </column>
+            <column name="title" type="varchar(255)"/>
+            <column name="sku" type="varchar(255)"/>
+            <column name="barcode" type="varchar(255)"/>
+            <column name="price" type="DECIMAL(10,2)"/>
+            <column name="compare_at_price" type="DECIMAL(10,2)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="00000000000000-3" author="mgaidau">
+        <sql>drop table if exists inventory_item;</sql>
+
+        <!-- Create InventoryItem Table -->
+        <createTable tableName="inventory_item">
+            <column name="id" type="varchar(255)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="variant" type="varchar(255)">
+                <constraints nullable="false" foreignKeyName="fk_inventory_variant" references="variant(id)"/>
+            </column>
+            <column name="sku" type="varchar(255)"/>
+        </createTable>
+
+    </changeSet>
+    <changeSet id="00000000000000-4" author="mgaidau">
+        <sql>drop table if exists tag;</sql>
+        <!-- Create Tag Table -->
+        <createTable tableName="tag">
+            <column name="id" type="varchar(255)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+        </createTable>
+
+    </changeSet>
+    <changeSet id="00000000000000-5" author="mgaidau">
+        <sql>drop table if exists product_tag;</sql>
+
+        <!-- Create Product_Tag Table (Many-to-Many Relationship) -->
+        <createTable tableName="product_tag">
+            <column name="id" type="varchar(255)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product" type="varchar(255)">
+                <constraints nullable="false" foreignKeyName="fk_product_tag_product" references="product(id)"/>
+            </column>
+            <column name="tag" type="varchar(255)">
+                <constraints nullable="false" foreignKeyName="fk_product_tag_tag" references="tag(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+</databaseChangeLog>
